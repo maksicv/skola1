@@ -1,16 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
-import { Paper, Grid} from 'material-ui';
+
 import SimpleTable from './SimpleTable'
 
-import List, {
-  ListItem,
-  ListItemAvatar,
-  ListItemIcon,
-  ListItemSecondaryAction,
-  ListItemText,
-} from 'material-ui/List';
+import {ListItem} from 'material-ui/List';
 
 
 const styles = theme => ({
@@ -20,20 +14,18 @@ const styles = theme => ({
 });
 
 function Pitanje(props){
-	const { classes } = props;
+        const { classes } = props;
 return(
- <div>
- <ListItem key={props.pitanje.id}> 
-<SimpleTable   kadOdgovori ={props.kadOdgovori} id_pitanja={props.pitanje.id} tekst_pitanja = {props.pitanje.tekst_pitanja} ponudjeni={props.pitanje.ponudjeni} />
-</ListItem>
-				
-					
-</div>
+ <div className={classes.root}  >
+  <ListItem key={props.pitanje.id}> 
+    <SimpleTable  odgovor={props.pitanje.odgovor}  kadOdgovori ={props.kadOdgovori} id_pitanja={props.pitanje.id} tekst_pitanja = {props.pitanje.tekst_pitanja} ponudjeni={props.pitanje.ponudjeni} />
+  </ListItem>
+ </div>
 )}
 
 
 
-		
+                
 Pitanje.propTypes = {
   classes: PropTypes.object.isRequired,
 }

@@ -1,22 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
-import AppBar from 'material-ui/AppBar';
-import Toolbar from 'material-ui/Toolbar';
-import Typography from 'material-ui/Typography';
-import Button from 'material-ui/Button';
-import IconButton from 'material-ui/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import { Paper, Grid} from 'material-ui';
+
+
+
+
+
+
+import { Grid} from 'material-ui';
 import Pitanje from './Pitanje'
 
-import List, {
-  ListItem,
-  ListItemAvatar,
-  ListItemIcon,
-  ListItemSecondaryAction,
-  ListItemText,
-} from 'material-ui/List';
+import List from 'material-ui/List';
 
 const styles = theme => ({
   root: {
@@ -31,11 +25,10 @@ const styles = theme => ({
 });
 
 function ListaPitanja(props){
-	const { classes } = props;
-	const dense=false;
-	const secondary=false;
-	
-	return(
+        const { classes } = props;
+        const dense=false;
+        
+        return(
 
 
 <Grid container spacing={16}>
@@ -43,10 +36,10 @@ function ListaPitanja(props){
             
             <div className={classes.demo}>
               <List dense={dense}>
-				  { props.pitanja.map( (item)=> (
-				  <Pitanje kadOdgovori ={props.kadOdgovori}  pitanje={item}/>
+                                  { props.pitanja.map( (item)=> (
+                                  <Pitanje key={item.id}  kadOdgovori ={props.kadOdgovori}  pitanje={item}/>
                   
-				  ))}
+                                  ))}
                 
               </List>
             </div>
@@ -54,7 +47,7 @@ function ListaPitanja(props){
          
         </Grid>
 )}
-		
+                
 ListaPitanja.propTypes = {
   classes: PropTypes.object.isRequired,
 }
