@@ -69,6 +69,9 @@ export default class FormDialog extends React.Component {
                 />
           </DialogContent>
           <DialogActions>
+            <Button onClick={this.handleCancel} color="primary">
+              Cancel
+            </Button>
             <Button onClick={this.handleLogin}  color="primary">
               Login
             </Button>
