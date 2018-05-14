@@ -4,39 +4,63 @@ import Header from './Header';
 import Desno from './Desno';
 import Unloged from './Unloged';
 import LoginDlg from './LoginDlg';
+import API from './api';
 
 const userimage = 'alex.jpg';
 
 class App extends Component {
-  constructor(){
-    super ();
-    this.state={
-      openLogin: false,
-      user: {},
-	 // user:{name:'Test', image:'alex.jpg'},
-      anchorEl: null,
-      logged: false,
-      anketa: { id_ankete: 44,
-                naziv_ankete: 'Prva anketa',
-                pitanja: [
-                  {id:1, 
-                   tekst_pitanja:'Nastavni istice cilj casa', 
-                   type:'Open', 
-                   ponudjeni:['lose','dobro', 'bolje', 'sasvim'] , 
-                   odgovor:""},
-                  {id:2, tekst_pitanja:'Nastavnik prilagodjava nastavu potrebama ucenika', type:'Open', ponudjeni:['lose','dobro', 'bolje', 'sasvim'], 
-                   odgovor:""},
-                  {id:3, tekst_pitanja:'Nastavnik podstice grupni rad', type:'Open', ponudjeni:['lose','dobro', 'bolje', 'sasvim'] ,
-                   odgovor:""}
-                ]
-                
-              }
-    }
-  };
+    constructor(){
+	super ();
+	this.state={
+	    openLogin: false,
+	    user: {},
+	    ankete:[],
+	    // user:{name:'Test', image:'alex.jpg'},
+	    anchorEl: null,
+	    logged: false,
+	    menuOptions : [ {  tekst:  "Uredjivanje ankete", mode: "UREDJIVANJE_ANKETE"}  ,
+	                    { tekst: " Nesto deseto ", mode: "SUTRA"},
+			    { tekst: " Odgovoranje", mode: "ODGOVORANJE"}],
+	    mode: "ANKETE",
+	    anketa: { id_ankete: 44,
+                      naziv_ankete: 'Prva anketa',
+                      pitanja: [
+			  {id:1, 
+			   tekst_pitanja:'Nasererer', 
+			   type:'Open', 
+			   ponudjeni:['lose','dobro', 'bolje', 'sasvim'] , 
+			   odgovor:""},
+			  {id:2,
+			   tekst_pitanja:'Nastavnik prilagodjava nastavu potrebama ucenika',
+			   type:'Closed',
+			   ponudjeni:['lose','dobro', 'bolje', 'sasvim'], 
+			   odgovor:""},
 
-  menuClick=(e)=>{
-    alert("menuClick");
-  }
+			  {id:3,
+			   tekst_pitanja:'Nastavnik podstice grupni rad',
+			   type:'Closed',
+			   ponudjeni:['lose','dobro', 'bolje', 'sasvim'] ,
+			   odgovor:""}
+                      ]
+		    }
+	};
+    };
+    
+    
+    onMenuClick=(e)=>{
+	this.setState( { anchorEl: e.target });
+    }
+  
+    handleMenuItemClick=(e,index)=>{
+  	this.setState( (prevState) =>  {
+	    const newMode  = prevState.menuOptions[index].mode;
+	    if ( prevState !== 'UREDJIVANJE_ANKETE' && newMode ===  'UREDJIVANJE_ANKETE'  ) {
+		API.getAnkete()
+		    .then((data)=> this.setState({mode: newMode, ankete: data , anchorEl: null}));
+	    };	
+	});
+    }
+ 
   
   cancellogin=()=>{
     this.setState({openLogin: false});
@@ -68,17 +92,19 @@ class App extends Component {
       <div>
         <Grid container>
           <Grid item xs={12}>
-            <Header menuClick={this.menuClick}
+            <Header onMenuClick={this.onMenuClick}
                     anchorEl={this.state.anchorEl}
                     onLoginButton={this.onLoginButton}
                     logged = {this.state.logged}
+					handleMenuItemClick = {this.handleMenuItemClick}
+					menuOptions={this.state.menuOptions}
                     user={this.state.user}/>
           </Grid>  
 
           <Grid container>
             { !this.state.logged   ? <Unloged/> : 
-              <Desno kadOdgovori ={this.kadOdgovori} celaAnketa={this.state.anketa}/>
-              }
+		<Desno mode= {this.state.mode}  kadOdgovori ={this.kadOdgovori} celaAnketa={this.state.anketa}/>
+		}
           </Grid>  
         </Grid>
         <LoginDlg cancellogin={this.cancellogin}
