@@ -4,7 +4,7 @@ import { withStyles } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
 import { Paper, Grid} from 'material-ui';
 import ListaPitanja from './ListaPitanja'
-import Ankete from './Ankete.js'
+
 
 const styles = theme => ({
   root: {
