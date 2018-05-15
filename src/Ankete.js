@@ -165,7 +165,7 @@ class Ankete extends React.Component {
 	API.deleteAnketa(id).then( ()=> this.refresh() );
     }
     
-  onAdd=(event) => {
+    onAdd=(event) => {
 	this.setState({ openEdit: true,editMode: "NEW"});
     }
     

@@ -29,13 +29,9 @@ const empty = {
 };
 
 export default withStyles(styles)(class AnketaDialog extends React.Component {
-
-  state = this.getInitState();
-
-    getInitState()
-    {   console.log("IN STATE");
-	console.log( this.props);
-	return this.props.anketa ? this.props.anketa : empty;
+    constructor(props){
+	super(props);
+	this.state = empty;
     }
   handleChange=(e)=>{
     this.setState({[e.target.id]: e.target.value});
