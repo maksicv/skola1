@@ -3,7 +3,7 @@ import { Grid} from 'material-ui';
 import Header from './Header';
 import Desno from './Desno';
 import Unloged from './Unloged';
-import LoginDlg from './LoginDlg';
+import LoginDlg from './dlg/LoginDlg';
 import API from './api';
 
 const userimage = 'alex.jpg';
@@ -13,12 +13,9 @@ class App extends Component {
 	super ();
 	this.state={
 	    openLogin: false,
-	    // user: {},
-	    ankete:[],
-	    user:{name:'Test', image:'alex.jpg'},
+	    user: {},
 	    anchorEl: null,
- 	    logged: true,
-//	    logged: false,
+ 	    logged: false,
 	    menuOptions : [ {  tekst:  "Uredjivanje ankete", mode: "UREDJIVANJE_ANKETE"}  ,
 	                    { tekst: " Nesto deseto ", mode: "SUTRA"},
 			    { tekst: " Odgovoranje", mode: "ODGOVORANJE"}],
@@ -110,7 +107,7 @@ class App extends Component {
 
           <Grid container>
             { !this.state.logged   ? <Unloged/> : 
-		<Desno mode= {this.state.mode}  kadOdgovori ={this.kadOdgovori} celaAnketa={this.state.anketa}/>
+		<Desno mode= {this.state.mode} kadOdgovori ={this.kadOdgovori} celaAnketa={this.state.anketa}/>
 		}
           </Grid>  
         </Grid>

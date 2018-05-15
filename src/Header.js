@@ -25,7 +25,7 @@ const styles = {
 
 function Header(props) {
         
-    const { classes,menuOptions,mode} = props
+    const { classes,menuOptions} = props
 
   return (
     <div className={classes.root}>
@@ -35,7 +35,7 @@ function Header(props) {
             <MenuIcon />
           </IconButton>
           <Typography variant="title" color="inherit" className={classes.flex}>
-          Meni {mode} 
+           Школа 
           </Typography>
     { props.logged ? 
       <Avatar src={props.user.image}/>  : <Button onClick={props.onLoginButton} color="inherit">Login</Button>

@@ -1,5 +1,6 @@
 import React from 'react';
 import Button from 'material-ui/Button';
+import { withStyles } from 'material-ui/styles';
 import TextField from 'material-ui/TextField';
 import Dialog, {
   DialogActions,
@@ -8,27 +9,39 @@ import Dialog, {
   DialogTitle,
 } from 'material-ui/Dialog';
 
+
+const styles = theme => ({
+  root: {
+    flexGrow: 1,
+  },
+  paper: {
+    margin:5,
+    padding: 10
+    
+  },
+});
+
+
 const empty = {
     title: '' ,
     description: '',
     mode: 'NEW'
 };
 
-export default class AnketaDialog extends React.Component {
+export default withStyles(styles)(class AnketaDialog extends React.Component {
 
-    
-  constructor(props){
-      super(props);
-      this.state = empty;
+  state = this.getInitState();
 
-  };
-
+    getInitState()
+    {   console.log("IN STATE");
+	console.log( this.props);
+	return this.props.anketa ? this.props.anketa : empty;
+    }
   handleChange=(e)=>{
-      this.setState(empty);
+    this.setState({[e.target.id]: e.target.value});
   };
 
   handleCancel=()=>{
-    this.props.cancellogin();
     this.setState(empty);
   }
   handleClose=()=>{
@@ -41,7 +54,8 @@ export default class AnketaDialog extends React.Component {
 
 
 
-    render() {
+      render() {
+	  console.log(this.state);
 	const title = this.state.mode === "NEW" ? "Nova anketa" : "Izmena";
     return (
       <div>
@@ -53,7 +67,7 @@ export default class AnketaDialog extends React.Component {
            <DialogTitle id="form-dialog-title">{title}</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Molimo vas da se ulogujete pre nastavka rada
+              Anketa je skup pitanja
             </DialogContentText>
             <TextField
               autoFocus
@@ -87,5 +101,5 @@ export default class AnketaDialog extends React.Component {
       </div>
     );
   }
-}
+})
 

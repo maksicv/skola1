@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
-import { Typography } from 'material-ui';
+import { Typography,Grid } from 'material-ui';
 import Table from 'material-ui/Table';
 import TableBody from 'material-ui/Table/TableBody';
 import TableCell from 'material-ui/Table/TableCell';
@@ -14,6 +14,12 @@ import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
+import Add from '@material-ui/icons/Add';
+import Delete from '@material-ui/icons/Delete';
+import Edit from '@material-ui/icons/Edit';
+
+import API from './api';
+import AnketaDlg from './dlg/AnketaDlg';
 
 const actionsStyles = theme => ({
   root: {
@@ -25,28 +31,27 @@ const actionsStyles = theme => ({
 });
 
 class TablePaginationActions extends React.Component {
-  handleFirstPageButtonClick = event => {
+    handleFirstPageButtonClick = event => {
     this.props.onChangePage(event, 0);
   };
 
-  handleBackButtonClick = event => {
+    handleBackButtonClick = event => {
     this.props.onChangePage(event, this.props.page - 1);
   };
 
-  handleNextButtonClick = event => {
+    handleNextButtonClick = event => {
     this.props.onChangePage(event, this.props.page + 1);
   };
 
-  handleLastPageButtonClick = event => {
-    this.props.onChangePage(
-      event,
-      Math.max(0, Math.ceil(this.props.count / this.props.rowsPerPage) - 1),
-    );
+    handleLastPageButtonClick = event => {
+	alert("Total pages" + this.props.totalPages );
+    this.props.onChangePage( event, this.props.totalPages );
   };
 
-  render() {
-    const { classes, count, page, rowsPerPage, theme } = this.props;
-
+    render() {
+	console.log(this.props);
+    const { classes, totalPages, page,  theme } = this.props;
+      
     return (
       <div className={classes.root}>
         <IconButton
@@ -65,14 +70,14 @@ class TablePaginationActions extends React.Component {
         </IconButton>
         <IconButton
           onClick={this.handleNextButtonClick}
-          disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+          disabled={page >= totalPages  }
           aria-label="Next Page"
         >
           {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
         </IconButton>
         <IconButton
           onClick={this.handleLastPageButtonClick}
-          disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+          disabled={page >= totalPages }
           aria-label="Last Page"
         >
           {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
@@ -112,29 +117,66 @@ const styles = theme => ({
 });
 
 class Ankete extends React.Component {
-  constructor(props, context) {
-    super(props, context);
+    constructor(props, context) {
+	super(props, context);
+	this.state = {
+	    API: props.API,
+	    data: [] ,
+	    openEdit:false,
+	    edit: {},
+	    head: ["id","Naslov","Opis"],
+	    page: 0,
+	    rowsPerPage: 5,
+	    totalElements: 0,
+	    totalPages : 0
+	};
+    }
 
-    this.state = {
-	data: props.ankete || [] ,
-	head: ["id","Naslov","Opis"],
-	page: 0,
-	rowsPerPage: 5,
-    };
-  }
 
-  handleChangePage = (event, page) => {
-    this.setState({ page });
+   onEdit= (anketa)=> {
+	console.log(anketa); 
+	this.setState( {edit: { title: anketa.title,
+				description: anketa.description,
+				mode: "EDIT"}
+				, openEdit: true});
+    }
+  submitAnketa=(anketa)=>{
+      API.postAnketa(anketa).then( (data)=> { this.setState((prevState)=>{
+						  return {openEdit: false};
+      });})
+	  .then( ()=> this.refresh() );
+      
   };
 
+  refresh=()=>{
+	    API.getAnkete(this.state.page, this.state.rowsPerPage)
+	  .then( (data) => {  this.setState({ totalElements: data.totalElements,totalPages: data.totalPages, data: data.content});});
+   }
+    
+    componentDidMount=()=>{
+	this.refresh();
+    };
+    handleChangePage = (event, page) => {
+      this.setState({ page });
+      this.refresh();
+  };
+
+    onDelete=(id)=>{
+	API.deleteAnketa(id).then( ()=> this.refresh() );
+    }
+    
+  onAdd=(event) => {
+	this.setState({ openEdit: true,editMode: "NEW"});
+    }
+    
   handleChangeRowsPerPage = event => {
     this.setState({ rowsPerPage: event.target.value });
   };
 
   render() {
     const { classes } = this.props;
-    const { data, rowsPerPage, page } = this.state;
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
+    const { rowsPerPage, page } = this.state;
+   
 
     return (
 	<Paper className={classes.root}>
@@ -142,30 +184,51 @@ class Ankete extends React.Component {
 	    Ankete
 	  </Typography>  
           <Paper className={classes.tableWrapper}>
-          <Table className={classes.table}>
-            <TableBody>
-	      <TableRow key={"0"}>
-              {this.state.head.map( n => {
-                return (
-             
-                    <TableCell key ={n} component="th" scope="row">
-                      {n}
-                    </TableCell>
-
-                );
-              })}
-	      </TableRow>
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 48 * emptyRows }}>
-                  <TableCell colSpan={6} />
+            <Table className={classes.table}>
+              <TableBody>
+		<TableRow key={"0"}>
+		  {this.state.head.map( n => {
+                      return (
+			  
+			  <TableCell key ={n} component="th" scope="row">
+			    <Typography variant="title" >{n} </Typography>
+			  </TableCell>
+			  
+                      );
+		  })}
+	                  <TableCell>
+	                         <IconButton onClick={this.addAnketa} aria-label="Dodaj anketu">
+  	    <Add color="primary" onClick = {this.onAdd}/>
+                 	          </IconButton>
+  	                 </TableCell>
+        
+ 	      </TableRow>
+            { this.state.data.map( (anketa) => (
+		
+                <TableRow key={anketa.id}  style={{ height: 48 }}>
+                  <TableCell > {anketa.id}  </TableCell>
+		  <TableCell > {anketa.title} </TableCell>
+		  <TableCell > {anketa.description} </TableCell>
+		  <TableCell>
+		    <Grid container>
+		    <Grid item>
+		    <IconButton onClick={this.addAnketa} aria-label="Brisanje ankete">
+  	              <Delete color="secondary" onClick = { ()=> { this.onDelete(anketa.id);  }  }/>
+                    </IconButton>
+		    <IconButton onClick={this.addAnketa} aria-label="Dodaj anketu">
+  	              <Edit color="primary" onClick = {() => this.onEdit(anketa)}/>
+                    </IconButton>
+		    </Grid>
+		    </Grid>
+		  </TableCell>
                 </TableRow>
-              )}
+            ))}
             </TableBody>
             <TableFooter>
               <TableRow>
                 <TablePagination
                   colSpan={3}
-                  count={data.length}
+                  count = {this.state.totalElements}
                   rowsPerPage={rowsPerPage}
                   page={page}
                   onChangePage={this.handleChangePage}
@@ -175,7 +238,8 @@ class Ankete extends React.Component {
               </TableRow>
             </TableFooter>
           </Table>
-        </Paper>
+            </Paper>
+	    <AnketaDlg anketa={this.state.edit} submitAnketa={this.submitAnketa}  open={this.state.openEdit} />      
       </Paper>
     );
   }
