@@ -14,10 +14,14 @@ const styles = theme => ({
   },
 });
 function Desno(props){
-        return(
- 	props.mode === "ODGOVARANJE"  ?    <Odgovaranje  mode= {props.mode}
-	                  kadOdgovori ={props.kadOdgovori}
-	    celaAnketa={props.celaAnketa} /> : <Ankete ankete={props.ankete}/>
+    console.log("MODE  " + props.mode );
+    const ele =  props.mode === "ODGOVORANJE"  ? <Odgovaranje  mode= {props.mode}
+	                                              kadOdgovori ={props.kadOdgovori}
+	                                              celaAnketa={props.celaAnketa} /> :
+                                    	<Ankete ankete={props.ankete}/>
+	 
+    return(
+           ele
         )
 	
 }

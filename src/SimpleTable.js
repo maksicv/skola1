@@ -37,7 +37,7 @@ function  SimpleTable(props) {
     <TableRow>
     <TableCell> {props.id_pitanja}</TableCell>
     { props.ponudjeni.map ( (item) => (
-      <TableCell key={item}   >{item}</TableCell>
+      <TableCell key={item}>{item}</TableCell>
     ))}
     
     </TableRow>
@@ -49,7 +49,7 @@ function  SimpleTable(props) {
     {props.ponudjeni.map( n => {
       return (
         
-        <TableCell className={classes.checkCell}  >
+              <TableCell key={n} className={classes.checkCell}  >
         <Checkbox             
         onChange={()=> props.kadOdgovori( props.id_pitanja, n ) }
         checked= {props.odgovor === n }

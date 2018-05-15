@@ -13,15 +13,16 @@ class App extends Component {
 	super ();
 	this.state={
 	    openLogin: false,
-	    user: {},
+	    // user: {},
 	    ankete:[],
-	    // user:{name:'Test', image:'alex.jpg'},
+	    user:{name:'Test', image:'alex.jpg'},
 	    anchorEl: null,
-	    logged: false,
+ 	    logged: true,
+//	    logged: false,
 	    menuOptions : [ {  tekst:  "Uredjivanje ankete", mode: "UREDJIVANJE_ANKETE"}  ,
 	                    { tekst: " Nesto deseto ", mode: "SUTRA"},
 			    { tekst: " Odgovoranje", mode: "ODGOVORANJE"}],
-	    mode: "ANKETE",
+	    mode: "?",
 	    anketa: { id_ankete: 44,
                       naziv_ankete: 'Prva anketa',
                       pitanja: [
@@ -54,10 +55,15 @@ class App extends Component {
     handleMenuItemClick=(e,index)=>{
   	this.setState( (prevState) =>  {
 	    const newMode  = prevState.menuOptions[index].mode;
+	    console.log(newMode);
 	    if ( prevState !== 'UREDJIVANJE_ANKETE' && newMode ===  'UREDJIVANJE_ANKETE'  ) {
 		API.getAnkete()
 		    .then((data)=> this.setState({mode: newMode, ankete: data , anchorEl: null}));
-	    };	
+	    };
+	    if ( prevState !== 'ODGOVORANJE' && newMode ===  'ODGOVORANJE'  ) {
+		API.getAnkete()
+		    .then((data)=> this.setState({mode: newMode, ankete: data , anchorEl: null}));
+	    };
 	});
     }
  
@@ -92,7 +98,8 @@ class App extends Component {
       <div>
         <Grid container>
           <Grid item xs={12}>
-            <Header onMenuClick={this.onMenuClick}
+            <Header mode= {this.state.mode}
+	            onMenuClick={this.onMenuClick}
                     anchorEl={this.state.anchorEl}
                     onLoginButton={this.onLoginButton}
                     logged = {this.state.logged}

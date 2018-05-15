@@ -36,12 +36,10 @@ function ListaPitanja(props){
             
             <div className={classes.demo}>
               <List dense={dense}>
-                                  { props.pitanja.map( (item)=> (
-                                  <Pitanje key={item.id}  kadOdgovori ={props.kadOdgovori}  pitanje={item}/>
-                  
-                                  ))}
-                
-              </List>
+                { props.pitanja.map( (item)=> (
+		    <Pitanje key={item.id}  kadOdgovori ={props.kadOdgovori}  pitanje={item}/>
+                ))}
+            </List>
             </div>
           </Grid>
          
