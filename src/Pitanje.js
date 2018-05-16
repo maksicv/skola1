@@ -17,10 +17,10 @@ function Pitanje(props){
         const { classes } = props;
 return(
 	<div key={props.pitanje.id} className={classes.root}  >
-  <ListItem key={props.pitanje.id}> 
-    <SimpleTable  odgovor={props.pitanje.odgovor}  kadOdgovori ={props.kadOdgovori} id_pitanja={props.pitanje.id} tekst_pitanja = {props.pitanje.tekst_pitanja} ponudjeni={props.pitanje.ponudjeni} />
-  </ListItem>
- </div>
+	  <ListItem key={props.pitanje.id}> 
+	    <SimpleTable  odgovor={props.pitanje.odgovor}  kadOdgovori ={props.kadOdgovori} id_pitanja={props.pitanje.id} tekst_pitanja = {props.pitanje.tekst_pitanja} ponudjeni={props.pitanje.ponudjeni} />
+	  </ListItem>
+	</div>
 )}
 
 

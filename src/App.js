@@ -13,13 +13,15 @@ class App extends Component {
 	super ();
 	this.state={
 	    openLogin: false,
-	    user: {},
+	    //   user: {},
+	    user: { username: "braca" },
+	    logged: true,
 	    anchorEl: null,
- 	    logged: false,
+ 	  //  logged: false,
 	    menuOptions : [ {  tekst:  "Uredjivanje ankete", mode: "UREDJIVANJE_ANKETE"}  ,
-	                    { tekst: " Nesto deseto ", mode: "SUTRA"},
-			    { tekst: " Odgovoranje", mode: "ODGOVORANJE"}],
-	    mode: "?",
+	                    { tekst: "Pitanja", mode: "PITANJA"},
+			    { tekst: "Odgovoranje", mode: "ODGOVORANJE"}],
+	    mode: "PITANJA",
 	    anketa: { id_ankete: 44,
                       naziv_ankete: 'Prva anketa',
                       pitanja: [
@@ -53,13 +55,16 @@ class App extends Component {
   	this.setState( (prevState) =>  {
 	    const newMode  = prevState.menuOptions[index].mode;
 	    console.log(newMode);
-	    if ( prevState !== 'UREDJIVANJE_ANKETE' && newMode ===  'UREDJIVANJE_ANKETE'  ) {
+	    if ( prevState !== 'UREDJIVANJE_ANKETE' && newMode ===  'UREDJIVANJE_ANKETE'  ){
 		API.getAnkete()
 		    .then((data)=> this.setState({mode: newMode, ankete: data , anchorEl: null}));
 	    };
-	    if ( prevState !== 'ODGOVORANJE' && newMode ===  'ODGOVORANJE'  ) {
+ 	    if ( prevState !== 'ODGOVORANJE' && newMode ===  'ODGOVORANJE'  ) {
 		API.getAnkete()
 		    .then((data)=> this.setState({mode: newMode, ankete: data , anchorEl: null}));
+	    };
+	    if ( prevState !== 'PITANJA' && newMode ===  'PITANJA'  ) {
+		return {mode: newMode, ankete: [] , anchorEl: null}
 	    };
 	});
     }

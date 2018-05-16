@@ -17,7 +17,6 @@ const styles = theme => ({
   },
 });
 function Odgovoranje(props){
-    console.log(props);
         const { classes } = props;
         return(
           <Grid item xs={12}>

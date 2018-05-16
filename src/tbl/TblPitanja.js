@@ -18,8 +18,7 @@ import Add from '@material-ui/icons/Add';
 import Delete from '@material-ui/icons/Delete';
 import Edit from '@material-ui/icons/Edit';
 
-import API from './api';
-import AnketaDlg from './dlg/AnketaDlg';
+import API from '../api';
 
 const actionsStyles = theme => ({
   root: {
@@ -30,61 +29,60 @@ const actionsStyles = theme => ({
   },
 });
 
+
 class TablePaginationActions extends React.Component {
     handleFirstPageButtonClick = event => {
-    this.props.onChangePage(event, 0);
-  };
-
+	this.props.onChangePage(event, 0);
+    };
+    
     handleBackButtonClick = event => {
-    this.props.onChangePage(event, this.props.page - 1);
-  };
-
+	this.props.onChangePage(event, this.props.page - 1);
+    };
+    
     handleNextButtonClick = event => {
-    this.props.onChangePage(event, this.props.page + 1);
-  };
-
+	this.props.onChangePage(event, this.props.page + 1);
+    };
+    
     handleLastPageButtonClick = event => {
-	alert("Total pages" + this.props.totalPages );
-    this.props.onChangePage( event, this.props.totalPages );
-  };
-
+	this.props.onChangePage( event, Math.floor(this.props.count / this.props.rowsPerPage)  );
+    };
+    
     render() {
-	console.log(this.props);
-    const { classes, totalPages, page,  theme } = this.props;
+	const { classes, totalPages, page,  theme } = this.props;
       
-    return (
-      <div className={classes.root}>
-        <IconButton
-          onClick={this.handleFirstPageButtonClick}
-          disabled={page === 0}
-          aria-label="First Page"
-        >
-          {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
-        </IconButton>
-        <IconButton
-          onClick={this.handleBackButtonClick}
-          disabled={page === 0}
-          aria-label="Previous Page"
-        >
-          {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-        </IconButton>
-        <IconButton
-          onClick={this.handleNextButtonClick}
-          disabled={page >= totalPages  }
-          aria-label="Next Page"
-        >
-          {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-        </IconButton>
-        <IconButton
-          onClick={this.handleLastPageButtonClick}
-          disabled={page >= totalPages }
-          aria-label="Last Page"
-        >
-          {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
-        </IconButton>
-      </div>
-    );
-  }
+	return (
+	    <div className={classes.root}>
+              <IconButton
+		onClick={this.handleFirstPageButtonClick}
+		disabled={page === 0}
+		aria-label="First Page"
+		>
+		{theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
+              </IconButton>
+              <IconButton
+		onClick={this.handleBackButtonClick}
+		disabled={page === 0}
+		aria-label="Previous Page"
+		>
+		{theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+              </IconButton>
+              <IconButton
+		onClick={this.handleNextButtonClick}
+		disabled={page >= totalPages  }
+		aria-label="Next Page"
+		>
+		{theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+              </IconButton>
+              <IconButton
+		onClick={this.handleLastPageButtonClick}
+		disabled={page >= totalPages }
+		aria-label="Last Page"
+		>
+		{theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
+              </IconButton>
+	    </div>
+	);
+    }
 }
 
 TablePaginationActions.propTypes = {
@@ -116,15 +114,14 @@ const styles = theme => ({
   },
 });
 
-class Ankete extends React.Component {
+class TblPitanja extends React.Component {
     constructor(props, context) {
 	super(props, context);
 	this.state = {
-	    API: props.API,
 	    data: [] ,
 	    openEdit:false,
 	    edit: {},
-	    head: ["id","Naslov","Opis"],
+	    head: ["id","Pitanje","Tip","Opcije"],
 	    page: 0,
 	    rowsPerPage: 5,
 	    totalElements: 0,
@@ -132,46 +129,6 @@ class Ankete extends React.Component {
 	};
     }
 
-
-   onEdit= (anketa)=> {
-	console.log(anketa); 
-	this.setState( {edit: { title: anketa.title,
-				description: anketa.description,
-				mode: "EDIT"}
-				, openEdit: true});
-    }
-  submitAnketa=(anketa)=>{
-      API.postAnketa(anketa).then( (data)=> { this.setState((prevState)=>{
-						  return {openEdit: false};
-      });})
-	  .then( ()=> this.refresh() );
-      
-  };
-
-  refresh=()=>{
-	    API.getAnkete(this.state.page, this.state.rowsPerPage)
-	  .then( (data) => {  this.setState({ totalElements: data.totalElements,totalPages: data.totalPages, data: data.content});});
-   }
-    
-    componentDidMount=()=>{
-	this.refresh();
-    };
-    handleChangePage = (event, page) => {
-      this.setState({ page });
-      this.refresh();
-  };
-
-    onDelete=(id)=>{
-	API.deleteAnketa(id).then( ()=> this.refresh() );
-    }
-    
-    onAdd=(event) => {
-	this.setState({ openEdit: true,editMode: "NEW"});
-    }
-    
-  handleChangeRowsPerPage = event => {
-    this.setState({ rowsPerPage: event.target.value });
-  };
 
   render() {
     const { classes } = this.props;
@@ -181,7 +138,7 @@ class Ankete extends React.Component {
     return (
 	<Paper className={classes.root}>
 	  <Typography variant="display1">
-	    Ankete
+	    TblPitanja
 	  </Typography>  
           <Paper className={classes.tableWrapper}>
             <Table className={classes.table}>
@@ -212,11 +169,11 @@ class Ankete extends React.Component {
 		  <TableCell>
 		    <Grid container>
 		    <Grid item>
-		    <IconButton onClick={this.addAnketa} aria-label="Brisanje ankete">
+		    <IconButton aria-label="Brisanje ankete">
   	              <Delete color="secondary" onClick = { ()=> { this.onDelete(anketa.id);  }  }/>
                     </IconButton>
-		    <IconButton onClick={this.addAnketa} aria-label="Dodaj anketu">
-  	              <Edit color="primary" onClick = {() => this.onEdit(anketa)}/>
+		    <IconButton  aria-label="Izmeni anketu">
+  	              <Edit color="primary" onClick = {() => this.onEdit({title: anketa.title,id: anketa.id,description: anketa.description} )}/>
                     </IconButton>
 		    </Grid>
 		    </Grid>
@@ -245,8 +202,8 @@ class Ankete extends React.Component {
   }
 }
 
-Ankete.propTypes = {
+TblPitanja.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Ankete);
+export default withStyles(styles)(TblPitanja);
