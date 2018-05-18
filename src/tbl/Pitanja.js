@@ -1,15 +1,12 @@
 import React,{Component} from 'react';
-import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
-import { CardActions,CardContent,Button,Card,Typography,Grid,Paper } from 'material-ui';
-import {TextField} from 'material-ui';
+import {Grid,Paper } from 'material-ui';
 
 import Add from '@material-ui/icons/Add';
-import Edit from '@material-ui/icons/Edit';
 
 import API from '../api';
 import Search from '../Search';
-
+import EditorPitanja from './EditorPitanja';
 
 const styles = theme => ({
     root: {
@@ -85,7 +82,7 @@ export default withStyles(styles)(class Pitanja extends Component {
                 </Grid>
 		
 		<Grid className={classes.mainPaper} xs={12}  item>
-
+		  <EditorPitanja/>
 		</Grid>
 	      </Grid>
             </Paper>

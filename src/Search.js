@@ -25,7 +25,7 @@ export default withStyles(styles)(class Search extends Component {
     }
     
     handleKeyPress=(e)=>{
-	if(e.key == 'Enter'){
+	if(e.key === 'Enter'){
 	    this.props.searchFun(this.state.search);
 	}
     }

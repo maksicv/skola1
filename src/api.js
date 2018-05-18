@@ -24,8 +24,8 @@ const API = 	{
 	const call = url + "pitanja?page=" + page
 	      + "&rowsPerPage=" + rowsperpage
 	      + "&search=" + search
-	return fetch(call).
-	    then( (response)=> response.json())  
+	return fetch(call)
+	    .then( (response)=> response.json())  
     },
     postAnketa: (anketa) => {
 	return fetch (url + "anketa" , {method: "POST",

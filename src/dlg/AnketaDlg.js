@@ -67,7 +67,7 @@ export default withStyles(styles)(class AnketaDialog extends React.Component {
 		<DialogTitle id="form-dialog-title">{title}</DialogTitle>
 		<DialogContent>
 		  <DialogContentText>
-		    Опишите анкету
+		      Opišite anketu
 		  </DialogContentText>
 		  <TextField
 		    autoFocus

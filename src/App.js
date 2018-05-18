@@ -4,6 +4,7 @@ import Header from './Header';
 import Desno from './Desno';
 import Unloged from './Unloged';
 import LoginDlg from './dlg/LoginDlg';
+import 'typeface-roboto'
 import API from './api';
 
 const userimage = 'alex.jpg';

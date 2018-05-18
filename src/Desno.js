@@ -28,6 +28,9 @@ function Desno(props){
 	    break;
     case "PITANJA" :
 	ele = <Pitanja/>;
+	break;
+    default:
+	ele = <div>Wrong mode</div>;
 	    
     };
 
@@ -35,7 +38,7 @@ function Desno(props){
      	 
     return(
            ele
-        )
+    );
 	
 }
 
