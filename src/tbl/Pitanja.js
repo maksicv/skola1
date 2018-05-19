@@ -47,17 +47,30 @@ export default withStyles(styles)(class Pitanja extends Component {
 	    mode: "NONE",
 	    search: '',
 	    page: 0,
-	    rowPerPage: 20,
+	    rowsPerPage: 30,
 	    openDlg: false,
 	};
+	
     }
 
     
     refresh=(page)=>{
-	API.getAnkete(page, this.state.rowsPerPage)
-	    .then( (data) => {  this.setState({ page: page, totalElements: data.totalElements,totalPages: data.totalPages, data: data.content});});
+	API.getPitanja(page, this.state.rowsPerPage)
+	    .then( (data) => {
+		const pitanja = data.content.map( ( pit )=>{
+		    return { description: pit.description , id: pit.id, tipPitanja: pit.tipPitanja, ponudjeniOdgovori: pit.ponudjeniOdgovori ?  pit.ponudjeniOdgovori.split(",") : [] }});
+		this.setState({ page: page, totalElements: data.totalElements,totalPages: data.totalPages, pitanja: pitanja});});
     }
+
+    deletePitanje=(id)=>{
+	API.deletePitanje(id)
+        .then(this.refresh(this.state.page));
+    }
+ 
     
+    componentDidMount(){
+	this.refresh(this.state.page);
+    }
 
     onSearch=(searchTerm)=>{
 	alert(searchTerm);
@@ -82,7 +95,9 @@ export default withStyles(styles)(class Pitanja extends Component {
                 </Grid>
 		
 		<Grid className={classes.mainPaper} xs={12}  item>
-		  <EditorPitanja/>
+		  { this.state.pitanja.map( (pitanje)=> {  
+		      return <EditorPitanja deletePitanje={this.deletePitanje} key={pitanje.id} pitanje={pitanje}/>; }
+				    )}
 		</Grid>
 	      </Grid>
             </Paper>

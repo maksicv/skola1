@@ -11,19 +11,26 @@ const API = 	{
 	return fetch(call)
 	    .then( (response)=>  response.json())
     },
+    
     deleteAnketa: (id) => {
 	return fetch(url+ "deleteanketa/" + id );
     },
+
+    deletePitanje: (id) => {
+	return fetch(url + "deletepitanje/" + id);
+    },
     
     postPitanje: (pitanje)=>{
+	console.log(JSON.stringify(pitanje));
 	return fetch(url+"pitanje", { method: "POST",
 				      headers: headers,
-				      body: JSON.stringify(pitanje)});
+				      body: JSON.stringify(pitanje)})
+	    .then( (response)=> response.json());
     },
     getPitanja: (page,rowsperpage,search)=>{
-	const call = url + "pitanja?page=" + page
+	const call = url + "pitanje?page=" + page
 	      + "&rowsPerPage=" + rowsperpage
-	      + "&search=" + search
+	      + ( search ?  "&search=" + search : "" )
 	return fetch(call)
 	    .then( (response)=> response.json())  
     },

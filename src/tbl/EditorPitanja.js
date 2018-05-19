@@ -2,6 +2,7 @@ import React from 'react';
 import { withStyles} from 'material-ui/styles';
 import {Paper} from 'material-ui';
 import NewPitanje from './NewPitanje';
+import ShowPitanje from './ShowPitanje';
 import API from '../api';
 const styles = theme => ({
     root: {
@@ -14,18 +15,30 @@ const styles = theme => ({
 export default withStyles(styles)(class EditorPitanja extends React.Component {
     constructor(props){
 	super(props);
-	this.state = {
-	    pitanje: {
-		decription: '',
-		id: null,
-		ponudjeniOdgovori: [],
-		tipPitanja: "OPEN"
-	    },
-	    mode: "NEW"
+ 	this.state = {
+	    pitanje: props.pitanje,
+	    mode: "SHOW"
 	};
     }
+
+
+    componentWillReceiveProps=(props)=>{
+	console.log(props.pitanje);
+	this.setState({pitanje: props.pitanje});
+    }
+    
+    
     addPitanje=(pitanje)=>{
-	API.postPitanje(pitanje).then((data)=>console.log(data));
+	const pitPost = { description: pitanje.description,
+			  id: null,
+			  ponudjeniOdgovori: pitanje.ponudjeni.join(","),
+			  tipPitanja: pitanje.tipPitanja  };
+	API.postPitanje(pitPost).then((data)=>{
+	    this.setState( { pitanje:  { description: data.description,
+					   id: data.id,
+					   ponudjeniOdgovori: data.ponudjeniOdgovori.split(","),
+					   tipPitanja: data.tipPitanja} , mode: "SHOW" }  );
+	});
     }
     render(){
 	const {classes} = this.props;
@@ -34,10 +47,12 @@ export default withStyles(styles)(class EditorPitanja extends React.Component {
 	case "NEW":
 	    ele = <NewPitanje addPitanje={this.addPitanje}  />;
 	    break;
+	case "SHOW":   
+            ele = <ShowPitanje onDelete={this.props.deletePitanje}  pitanje={this.state.pitanje} />;
+	    break;
 	default:
-	    ele = <div>Wrong mode</div>
+	    ele = <div>Wrong mode</div>;
 	}
-	console.log(ele);
 	 return (
 	    <Paper className={classes.root}>
 	      {ele}

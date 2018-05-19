@@ -9,7 +9,7 @@ import { FormControl,
 	 RadioGroup
        } from 'material-ui';
 import Add from '@material-ui/icons/Add';
-import CloudDone from '@material-ui/icons/CloudDone';
+
 const styles = theme => ({
     textField: {
 	marginLeft: theme.spacing.unit,
