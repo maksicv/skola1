@@ -18,7 +18,7 @@ export default withStyles(styles)(class ShowPitanje extends React.Component {
 	const {pitanje}= this.props;
 	return (
 	    <Grid container>
-	      <Grid className={classes.grid} item>{pitanje.id}{pitanje.description}</Grid>
+	      <Grid className={classes.grid} item>{pitanje.description}</Grid>
 	      <Grid className={classes.grid} item>{pitanje.tipPitanja}</Grid>
 	      {
 		  pitanje.tipPitanja === "RESTRICTED" ?   pitanje.ponudjeniOdgovori.map(

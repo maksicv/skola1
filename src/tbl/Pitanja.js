@@ -45,7 +45,7 @@ export default withStyles(styles)(class Pitanja extends Component {
 	    pitanja: [],
 	    selected: {},
 	    mode: "NONE",
-	    search: '',
+	    searchTerm: '',
 	    page: 0,
 	    rowsPerPage: 30,
 	    openDlg: false,
@@ -54,11 +54,11 @@ export default withStyles(styles)(class Pitanja extends Component {
     }
 
     
-    refresh=(page)=>{
-	API.getPitanja(page, this.state.rowsPerPage)
+    refresh=(page,searchTerm)=>{
+	API.getPitanja(page, this.state.rowsPerPage,searchTerm)
 	    .then( (data) => {
 		const pitanja = data.content.map( ( pit )=>{
-		    return { description: pit.description , id: pit.id, tipPitanja: pit.tipPitanja, ponudjeniOdgovori: pit.ponudjeniOdgovori ?  pit.ponudjeniOdgovori.split(",") : [] }});
+		    return { description: pit.description , id: pit.id, tipPitanja: pit.tipPitanja, ponudjeniOdgovori: pit.ponudjeniOdgovori ?  pit.ponudjeniOdgovori.split(",") : [] };});
 		this.setState({ page: page, totalElements: data.totalElements,totalPages: data.totalPages, pitanja: pitanja});});
     }
 
@@ -73,7 +73,8 @@ export default withStyles(styles)(class Pitanja extends Component {
     }
 
     onSearch=(searchTerm)=>{
-	alert(searchTerm);
+	this.setState({searchTerm: searchTerm});
+	this.refresh(this.state.page,searchTerm);
     }
 
     addPitanje=()=>{

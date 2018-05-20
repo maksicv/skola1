@@ -15,7 +15,6 @@ const styles = theme => ({
   },
 });
 function Desno(props){
-    console.log("MODE  " + props.mode );
     let ele = null;
     switch ( props.mode ){
       case "ODGOVORANJE":
