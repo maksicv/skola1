@@ -66,7 +66,7 @@ export default withStyles(styles)(class Pitanja extends Component {
 	API.deletePitanje(id)
         .then(this.refresh(this.state.page));
     }
- 
+
     
     componentDidMount(){
 	this.refresh(this.state.page);
@@ -97,7 +97,7 @@ export default withStyles(styles)(class Pitanja extends Component {
 		
 		<Grid className={classes.mainPaper} xs={12}  item>
 		  { this.state.pitanja.map( (pitanje)=> {  
-		      return <EditorPitanja deletePitanje={this.deletePitanje} key={pitanje.id} pitanje={pitanje}/>; }
+		      return <EditorPitanja onPreview={this.previewPitanje}  deletePitanje={this.deletePitanje} key={pitanje.id} pitanje={pitanje}/>; }
 				    )}
 		</Grid>
 	      </Grid>

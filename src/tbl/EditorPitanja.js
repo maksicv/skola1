@@ -17,8 +17,14 @@ export default withStyles(styles)(class EditorPitanja extends React.Component {
 	super(props);
  	this.state = {
 	    pitanje: props.pitanje,
-	    mode: "SHOW"
+	    mode: "SHOW",
+	    
 	};
+	console.log(props);
+    }
+
+    onPreview=()=>{
+	this.setState( { mode: "PREVIEW" });
     }
 
 
@@ -48,7 +54,10 @@ export default withStyles(styles)(class EditorPitanja extends React.Component {
 	    ele = <NewPitanje addPitanje={this.addPitanje}  />;
 	    break;
 	case "SHOW":   
-            ele = <ShowPitanje onDelete={this.props.deletePitanje}  pitanje={this.state.pitanje} />;
+            ele = <ShowPitanje preview = {false} onPreview={this.onPreview}  onDelete={this.props.deletePitanje}  pitanje={this.state.pitanje} />;
+	    break;
+	case "PREVIEW":   
+            ele = <ShowPitanje preview = {true}  onPreview={this.onPreview}  onDelete={this.props.deletePitanje}  pitanje={this.state.pitanje} />;
 	    break;
 	default:
 	    ele = <div>Wrong mode</div>;
