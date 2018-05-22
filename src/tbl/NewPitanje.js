@@ -10,6 +10,7 @@ import { FormControl,
        } from 'material-ui';
 import Add from '@material-ui/icons/Add';
 
+
 const styles = theme => ({
     textField: {
 	marginLeft: theme.spacing.unit,
@@ -29,17 +30,20 @@ export default withStyles(styles)( class NewPitanje extends React.Component {
 
     constructor(props){
 	super(props);
+	console.log(props.pitanje);
 	this.state ={
 	    pitanje: {
-		description: "",
-		tipPitanja: "OPEN",
-		ponudjeni: []
+		description: props.pitanje.description,
+		tipPitanja: props.pitanje.tipPitanja ,
+		ponudjeni: props.pitanje.ponudjeniOdgovori
 		
 	    },
 	    answer: ""
 	};
     }
+
     handleDone=(e)=>{
+	console.log(this.state.pitanje);
 	this.props.addPitanje(this.state.pitanje);
     }
     handleChangePitanje=(e)=> {
@@ -130,14 +134,14 @@ export default withStyles(styles)( class NewPitanje extends React.Component {
 				margin="normal"
 				/>
 
-			      <Add onClick={this.handleAddAnswer}  />
+			        <Add onClick={this.handleAddAnswer}  />
 				  <div>
 					{ this.state.pitanje.ponudjeni.map( (e)=>
-									    <Chip onDelete={()=>this.handleDeleteAnswer(e)} label={e} key={e}/>)
-
+				          <Chip onDelete={()=>this.handleDeleteAnswer(e)} label={e} key={e}/>)
+					  
 					}
 	          </div>
-		  </Grid> : <div></div> }
+		  </Grid> :<div/> }
 	    </Grid>
 		<Grid><Button onClick={this.handleDone}> Done </Button></Grid>
 		</Grid>

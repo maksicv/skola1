@@ -9,7 +9,7 @@ import {Button} from 'material-ui';
 import MenuIcon from '@material-ui/icons/Menu';
 import Avatar from 'material-ui/Avatar';
 import Menu, { MenuItem } from 'material-ui/Menu';
-
+import API from './api'
 const styles = {
   root: {
     flexGrow: 1,
@@ -38,7 +38,11 @@ function Header(props) {
 		Škola
               </Typography>
 	      { props.logged ? 
-		  <span><Typography>{props.user.username}</Typography><Avatar src={props.user.image}/></span>  : <Button onClick={props.onLoginButton} color="inherit">Login</Button>
+		  <span>
+			<a href={API.logouturl}><Typography>{props.user.username} </Typography></a>
+		<Avatar src={props.user.image}/> 
+		        
+		  </span>  : <Button onClick={props.onLoginButton1} color="inherit">Login</Button>
 		  }
             </Toolbar>
 	  </AppBar>

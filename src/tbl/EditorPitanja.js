@@ -1,8 +1,13 @@
 import React from 'react';
 import { withStyles} from 'material-ui/styles';
-import {Paper} from 'material-ui';
+import {Paper,Grid} from 'material-ui';
 import NewPitanje from './NewPitanje';
 import ShowPitanje from './ShowPitanje';
+import Delete from '@material-ui/icons/Delete';
+import Edit from '@material-ui/icons/Edit';
+import RemoveRedEye from '@material-ui/icons/RemoveRedEye';
+import Done from '@material-ui/icons/Done';
+
 import API from '../api';
 const styles = theme => ({
     root: {
@@ -20,23 +25,29 @@ export default withStyles(styles)(class EditorPitanja extends React.Component {
 	    mode: "SHOW",
 	    
 	};
-	console.log(props);
     }
 
     onPreview=()=>{
-	this.setState( { mode: "PREVIEW" });
+	if (this.state.mode !== "PREVIEW" ) {
+	    this.setState( { mode: "PREVIEW" });
+	} else {
+	    this.setState( { mode: "SHOW" });
+	}
     }
 
+    edit=(id)=>{
+	this.setState( {mode: "EDIT"});
+    }
 
-    componentWillReceiveProps=(props)=>{
-	console.log(props.pitanje);
-	this.setState({pitanje: props.pitanje});
+    done=()=> {
+	this.setState( {mode:"SHOW"});
+	this.props.editPitanje(this.state.pitanje);
     }
     
     
     addPitanje=(pitanje)=>{
 	const pitPost = { description: pitanje.description,
-			  id: null,
+			  id: pitanje.id,
 			  ponudjeniOdgovori: pitanje.ponudjeni.join(","),
 			  tipPitanja: pitanje.tipPitanja  };
 	API.postPitanje(pitPost).then((data)=>{
@@ -53,6 +64,9 @@ export default withStyles(styles)(class EditorPitanja extends React.Component {
 	case "NEW":
 	    ele = <NewPitanje addPitanje={this.addPitanje}  />;
 	    break;
+	case "EDIT":
+	    ele = <NewPitanje addPitanje={this.addPitanje} pitanje={this.state.pitanje}  />;
+	    break;
 	case "SHOW":   
             ele = <ShowPitanje preview = {false} onPreview={this.onPreview}  onDelete={this.props.deletePitanje}  pitanje={this.state.pitanje} />;
 	    break;
@@ -63,8 +77,19 @@ export default withStyles(styles)(class EditorPitanja extends React.Component {
 	    ele = <div>Wrong mode</div>;
 	}
 	 return (
-	    <Paper className={classes.root}>
-	      {ele}
+	     <Paper className={classes.root}>
+	       <Grid container>
+		 <Grid item style={{flexGrow:1}} >
+		   {ele}
+		 </Grid>
+		 <Grid item style={{margin: 3}} >
+		   { this.state.mode === "EDIT" ?  <Done onClick={()=>alert("deeone")} /> :  <Edit onClick={ ()=> { this.edit(this.state.pitanje.id); } }   /> }
+		    <Delete onClick={ ()=> this.props.deletePitanje(this.state.pitanje.id)  }  />
+        	    <RemoveRedEye onClick={ ()=> this.onPreview(this.state.pitanje.id)}  />
+
+		 </Grid>
+		 
+	       </Grid>
 	    </Paper>
 		
 	);

@@ -47,16 +47,17 @@ export default withStyles(styles)(class Pitanja extends Component {
 	    mode: "NONE",
 	    searchTerm: '',
 	    page: 0,
-	    rowsPerPage: 30,
-	    openDlg: false,
+	    rowsPerPage: 30
 	};
 	
     }
 
     
     refresh=(page,searchTerm)=>{
+	console.log('refresh');
 	API.getPitanja(page, this.state.rowsPerPage,searchTerm)
 	    .then( (data) => {
+		console.log (data.content);
 		const pitanja = data.content.map( ( pit )=>{
 		    return { description: pit.description , id: pit.id, tipPitanja: pit.tipPitanja, ponudjeniOdgovori: pit.ponudjeniOdgovori ?  pit.ponudjeniOdgovori.split(",") : [] };});
 		this.setState({ page: page, totalElements: data.totalElements,totalPages: data.totalPages, pitanja: pitanja});});
@@ -77,8 +78,13 @@ export default withStyles(styles)(class Pitanja extends Component {
 	this.refresh(this.state.page,searchTerm);
     }
 
+    editPitanje=(pit)=>{
+	console.log(pit);
+	const pitanje = {description: pit.description , id: pit.id, tipPitanja: pit.tipPitanja, ponudjeniOdgovori: pit.ponudjeni};
+	API.postPitanje(pitanje).then( ()=> this.refresh(this.state.page,this.state.searchTerm));
+    }
     addPitanje=()=>{
-	this.setState({openDlg: true});
+	alert("333");
     }
     
     render (){
@@ -97,7 +103,10 @@ export default withStyles(styles)(class Pitanja extends Component {
 		
 		<Grid className={classes.mainPaper} xs={12}  item>
 		  { this.state.pitanja.map( (pitanje)=> {  
-		      return <EditorPitanja onPreview={this.previewPitanje}  deletePitanje={this.deletePitanje} key={pitanje.id} pitanje={pitanje}/>; }
+		      return <EditorPitanja onPreview={this.previewPitanje}
+						deletePitanje={this.deletePitanje}
+						editPitanje={this.editPitanje}
+						key={pitanje.id} pitanje={pitanje}/>; }
 				    )}
 		</Grid>
 	      </Grid>

@@ -3,22 +3,23 @@ import { Grid} from 'material-ui';
 import Header from './Header';
 import Desno from './Desno';
 import Unloged from './Unloged';
-import LoginDlg from './dlg/LoginDlg';
-import 'typeface-roboto'
+import 'typeface-roboto';
 import API from './api';
+import Keycloak from 'keycloak-js';
 
 const userimage = 'alex.jpg';
+
+const keycloak = Keycloak();
 
 class App extends Component {
     constructor(){
 	super ();
 	this.state={
 	    openLogin: false,
-	    //   user: {},
-	    user: { username: "braca" },
-	    logged: true,
+	    keycloack: null,
+	    user: null,
+	    logged: false,
 	    anchorEl: null,
- 	  //  logged: false,
 	    menuOptions : [ {  tekst:  "Uredjivanje ankete", mode: "UREDJIVANJE_ANKETE"}  ,
 	                    { tekst: "Pitanja", mode: "PITANJA"},
 			    { tekst: "Odgovoranje", mode: "ODGOVORANJE"}],
@@ -65,8 +66,9 @@ class App extends Component {
 		    .then((data)=> this.setState({mode: newMode, ankete: data , anchorEl: null}));
 	    };
 	    if ( prevState !== 'PITANJA' && newMode ===  'PITANJA'  ) {
-		return {mode: newMode, ankete: [] , anchorEl: null}
+		return {mode: newMode, ankete: [] , anchorEl: null};
 	    };
+	    return null;
 	});
     }
  
@@ -75,14 +77,25 @@ class App extends Component {
     this.setState({openLogin: false});
   }
 
-  login= ( {username,password})=>{
-    this.setState({openLogin: false});
-    this.setState({logged: true, user: { username: username, image:userimage} })
+  login=(authenticated)=>{
+      alert("Login");
   }
   
   onLoginButton=()=>{
-    this.setState({openLogin: true});
+      this.login();
   }
+
+ componentDidMount=()=>{
+     keycloak.init().success( auth => {
+	 auth ? keycloak.loadUserInfo().then((data)=> { API.setKeycloak(keycloak);
+							this.setState({logged: true ,
+								       user: {image: userimage,
+									      username: data.preferred_username,token:keycloak.token }} );
+							 } ) : keycloak.login();
+     });
+     
+    }
+    
   kadOdgovori = ( idpitanja, odgovor ) =>{
     this.setState( (prevState)=> {
       const oldPitanje = Object.assign({},...prevState.anketa.pitanja.filter( (pitanje)=>{ return idpitanja === pitanje.id}),{odgovor: odgovor} )
@@ -96,7 +109,6 @@ class App extends Component {
                  );
   }
   render() {
-    console.log(this.state.user);
     return (
       <div>
         <Grid container>
@@ -106,8 +118,8 @@ class App extends Component {
                     anchorEl={this.state.anchorEl}
                     onLoginButton={this.onLoginButton}
                     logged = {this.state.logged}
-					handleMenuItemClick = {this.handleMenuItemClick}
-					menuOptions={this.state.menuOptions}
+		    handleMenuItemClick = {this.handleMenuItemClick}
+		    menuOptions={this.state.menuOptions}
                     user={this.state.user}/>
           </Grid>  
 
@@ -117,12 +129,10 @@ class App extends Component {
 		}
           </Grid>  
         </Grid>
-        <LoginDlg cancellogin={this.cancellogin}
-                  login={this.login}
-                  open={this.state.openLogin} />      
-    </div>
+      </div>
     );
   }
 }
+
 
 export default App;
