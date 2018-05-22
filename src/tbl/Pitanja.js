@@ -54,10 +54,8 @@ export default withStyles(styles)(class Pitanja extends Component {
 
     
     refresh=(page,searchTerm)=>{
-	console.log('refresh');
 	API.getPitanja(page, this.state.rowsPerPage,searchTerm)
 	    .then( (data) => {
-		console.log (data.content);
 		const pitanja = data.content.map( ( pit )=>{
 		    return { description: pit.description , id: pit.id, tipPitanja: pit.tipPitanja, ponudjeniOdgovori: pit.ponudjeniOdgovori ?  pit.ponudjeniOdgovori.split(",") : [] };});
 		this.setState({ page: page, totalElements: data.totalElements,totalPages: data.totalPages, pitanja: pitanja});});
@@ -79,12 +77,13 @@ export default withStyles(styles)(class Pitanja extends Component {
     }
 
     editPitanje=(pit)=>{
-	console.log(pit);
 	const pitanje = {description: pit.description , id: pit.id, tipPitanja: pit.tipPitanja, ponudjeniOdgovori: pit.ponudjeni};
 	API.postPitanje(pitanje).then( ()=> this.refresh(this.state.page,this.state.searchTerm));
     }
     addPitanje=()=>{
-	alert("333");
+	this.setState((prevState)=> {
+	    return { pitanja: [ { description: "", id: null, tipPitanja: "OPEN", ponudjeniOdgovori:[] }, ...prevState.pitanja]};
+	});
     }
     
     render (){

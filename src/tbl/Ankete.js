@@ -17,7 +17,7 @@ import LastPageIcon from '@material-ui/icons/LastPage';
 import Add from '@material-ui/icons/Add';
 import Delete from '@material-ui/icons/Delete';
 import Edit from '@material-ui/icons/Edit';
-
+import PlaylistAdd from '@material-ui/icons/PlaylistAdd';
 import API from '../api';
 import AnketaDlg from '../dlg/AnketaDlg';
 
@@ -216,6 +216,10 @@ class Ankete extends React.Component {
 		    <IconButton  aria-label="Izmeni anketu">
   	              <Edit color="primary" onClick = {() => this.onEdit({title: anketa.title,id: anketa.id,description: anketa.description} )}/>
                     </IconButton>
+		    <IconButton  aria-label="Uredi anketu">
+  	              <PlaylistAdd color="primary" onClick = {() => this.props.dodajPitanja(anketa.id) } />
+                    </IconButton>
+
 		    </Grid>
 		    </Grid>
 		  </TableCell>

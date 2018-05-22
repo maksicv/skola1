@@ -10,6 +10,7 @@ const API = 	{
 	API.logouturl = keycloak.createLogoutUrl();
     },
 
+    
     getAnkete: ( page,rowsperpage  )=> {
 	const call =   API.url + "anketa?page=" + page + "&rowsPerPage=" + rowsperpage;
 	return fetch(call,{headers: API.headers})
@@ -25,7 +26,6 @@ const API = 	{
     }, 
     
     postPitanje: (pitanje)=>{
-	console.log(JSON.stringify(pitanje));
 	return fetch(API.url+ "pitanje", { method: "POST",
 					    headers: API.headers,
 					    body: JSON.stringify(pitanje)})

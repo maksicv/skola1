@@ -5,7 +5,6 @@ import { FormControl,
 	 FormLabel,
          FormControlLabel,
          Radio,
-	 Button,
 	 RadioGroup
        } from 'material-ui';
 import Add from '@material-ui/icons/Add';
@@ -28,62 +27,8 @@ const styles = theme => ({
 
 export default withStyles(styles)( class NewPitanje extends React.Component {
 
-    constructor(props){
-	super(props);
-	console.log(props.pitanje);
-	this.state ={
-	    pitanje: {
-		description: props.pitanje.description,
-		tipPitanja: props.pitanje.tipPitanja ,
-		ponudjeni: props.pitanje.ponudjeniOdgovori
-		
-	    },
-	    answer: ""
-	};
-    }
 
-    handleDone=(e)=>{
-	console.log(this.state.pitanje);
-	this.props.addPitanje(this.state.pitanje);
-    }
-    handleChangePitanje=(e)=> {
-	const pitanje = e.target.value;
-	this.setState((prevState)=>{
-	    const newPitanje = Object.assign({},prevState.pitanje,{description: pitanje  });
-	    return { pitanje: newPitanje };
-	});
-	
-    }
-    handleAddAnswer=(e)=>{
-	this.setState((prevState)=>{
-	    const newPonudjeni = [ ...prevState.pitanje.ponudjeni,prevState.answer];
-	    const newPitanje =  Object.assign({},
-					      prevState.pitanje,
-					      {ponudjeni: newPonudjeni})
-	    ;
-	    return{ pitanje: newPitanje, answer:""};
-	    
-	});
-    }
     
-    handleChangeTipPitanja=(e)=>{
-	const tipPitanja = e.target.value;
-	this.setState((prevState)=>{
-	    const newPitanje = Object.assign({},prevState.pitanje,{tipPitanja: tipPitanja });  
-	    return {pitanje: newPitanje};
-	});
-    }
-    handleAnswerText=(e) =>{
-	const answer = e.target.value;
-	this.setState({answer: answer });
-    }
-    handleDeleteAnswer=(answer)=>{
-	this.setState((prevState)=>{
-	    const newPonudjeni = prevState.pitanje.ponudjeni.filter( (a)=>{return answer !== a });
-	    const newPitanje = Object.assign({},prevState.pitanje, {ponudjeni: newPonudjeni} );
-	    return { pitanje: newPitanje};
-	});
-    } 
     render() {
 	const {classes} = this.props;
 	return (
@@ -95,8 +40,8 @@ export default withStyles(styles)( class NewPitanje extends React.Component {
 		    className={classes.textField}
 		    id="description"
 		    label="Pitanje"
-		    onChange ={this.handleChangePitanje} 
-		    value={this.state.pitanje.description}
+		    onChange ={this.props.handleChangePitanje} 
+		    value={this.props.pitanje.description}
 		    placeholder="Pitanje"
 		    multiline
 		    margin="normal"
@@ -110,8 +55,8 @@ export default withStyles(styles)( class NewPitanje extends React.Component {
 		      aria-label="tip pitanja"
 		      name="tipPitanja"
 		      className={classes.group}
-		      value={this.state.pitanje.tipPitanja}
-		      onChange={ this.handleChangeTipPitanja }
+		      value={this.props.pitanje.tipPitanja}
+		      onChange={ this.props.handleChangeTipPitanja }
 		      >
 		  
 		      <FormControlLabel value="OPEN"
@@ -123,27 +68,26 @@ export default withStyles(styles)( class NewPitanje extends React.Component {
 		    </RadioGroup>
 		  </FormControl>
 		</Grid>
-		{ this.state.pitanje.tipPitanja === "RESTRICTED" ?
+		{ this.props.pitanje.tipPitanja === "RESTRICTED" ?
 		    <Grid item xs={5}>
 			  <TextField
 				className={classes.textField}
 				id="newanswer"
-				onChange={this.handleAnswerText}
+				onChange={this.props.handleAnswerText}
 				label="Odgovor"
 				placeholder="Pondudjeni Odgovor"
 				margin="normal"
 				/>
 
-			        <Add onClick={this.handleAddAnswer}  />
+			        <Add onClick={this.props.handleAddAnswer}  />
 				  <div>
-					{ this.state.pitanje.ponudjeni.map( (e)=>
-				          <Chip onDelete={()=>this.handleDeleteAnswer(e)} label={e} key={e}/>)
+					{ this.props.pitanje.ponudjeniOdgovori.map( (e)=>
+						<Chip onDelete={()=>this.props.handleDeleteAnswer(e)} label={e} key={e}/>)
 					  
 					}
 	          </div>
 		  </Grid> :<div/> }
 	    </Grid>
-		<Grid><Button onClick={this.handleDone}> Done </Button></Grid>
 		</Grid>
 		
 	);

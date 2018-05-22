@@ -20,11 +20,14 @@ const styles = theme => ({
 export default withStyles(styles)(class EditorPitanja extends React.Component {
     constructor(props){
 	super(props);
+
  	this.state = {
 	    pitanje: props.pitanje,
-	    mode: "SHOW",
-	    
+	    mode: props.pitanje.id ? "SHOW" : "EDIT" ,
+	    answer: "",
+
 	};
+
     }
 
     onPreview=()=>{
@@ -45,11 +48,12 @@ export default withStyles(styles)(class EditorPitanja extends React.Component {
     }
     
     
-    addPitanje=(pitanje)=>{
-	const pitPost = { description: pitanje.description,
-			  id: pitanje.id,
-			  ponudjeniOdgovori: pitanje.ponudjeni.join(","),
-			  tipPitanja: pitanje.tipPitanja  };
+    addPitanje=()=>{
+	const pitPost = { description: this.state.pitanje.description,
+			  id: this.state.pitanje.id,
+			  ponudjeniOdgovori: this.state.pitanje.ponudjeniOdgovori.join(","),
+			  tipPitanja: this.state.pitanje.tipPitanja  };
+
 	API.postPitanje(pitPost).then((data)=>{
 	    this.setState( { pitanje:  { description: data.description,
 					   id: data.id,
@@ -57,6 +61,50 @@ export default withStyles(styles)(class EditorPitanja extends React.Component {
 					   tipPitanja: data.tipPitanja} , mode: "SHOW" }  );
 	});
     }
+
+    handleChangePitanje=(e)=> {
+	const pitanje = e.target.value;
+	this.setState((prevState)=>{
+	    const newPitanje = Object.assign({},prevState.pitanje,{description: pitanje  });
+	    return { pitanje: newPitanje };
+	});
+	
+    }
+
+    handleChangeTipPitanja=(e)=>{
+	const tipPitanja = e.target.value;
+	this.setState((prevState)=>{
+	    const newPitanje = Object.assign({},prevState.pitanje,{tipPitanja: tipPitanja });  
+	    return {pitanje: newPitanje};
+	});
+    }
+
+    handleAnswerText=(e) =>{
+	const answer = e.target.value;
+	this.setState({answer: answer });
+    }
+
+    handleAddAnswer=(e)=>{
+	this.setState((prevState)=>{
+	    const newPonudjeni = [ ...prevState.pitanje.ponudjeniOdgovori,prevState.answer];
+	    const newPitanje =  Object.assign({},
+					      prevState.pitanje,
+					      {ponudjeniOdgovori: newPonudjeni})
+	    ;
+	    return{ pitanje: newPitanje, answer:""};
+	    
+	});
+    }
+
+    handleDeleteAnswer=(answer)=>{
+	this.setState((prevState)=>{
+	    const newPonudjeni = prevState.pitanje.ponudjeni.filter( (a)=>{return answer !== a });
+	    const newPitanje = Object.assign({},prevState.pitanje, {ponudjeni: newPonudjeni} );
+	    return { pitanje: newPitanje};
+	});
+    } 
+
+    
     render(){
 	const {classes} = this.props;
 	let ele = <div>WWWW</div>;
@@ -65,7 +113,13 @@ export default withStyles(styles)(class EditorPitanja extends React.Component {
 	    ele = <NewPitanje addPitanje={this.addPitanje}  />;
 	    break;
 	case "EDIT":
-	    ele = <NewPitanje addPitanje={this.addPitanje} pitanje={this.state.pitanje}  />;
+	    ele = <NewPitanje handleChangePitanje={this.handleChangePitanje}
+                              addPitanje={this.addPitanje}
+                              handleDeleteAnswer={this.handleDeleteAnswer} 
+	                      handleAddAnswer={this.handleAddAnswer}
+                              handleAnswerText={this.handleAnswerText}
+   	                      handleChangeTipPitanja={this.handleChangeTipPitanja}
+	                      pitanje={this.state.pitanje}  />;
 	    break;
 	case "SHOW":   
             ele = <ShowPitanje preview = {false} onPreview={this.onPreview}  onDelete={this.props.deletePitanje}  pitanje={this.state.pitanje} />;
@@ -83,7 +137,7 @@ export default withStyles(styles)(class EditorPitanja extends React.Component {
 		   {ele}
 		 </Grid>
 		 <Grid item style={{margin: 3}} >
-		   { this.state.mode === "EDIT" ?  <Done onClick={()=>alert("deeone")} /> :  <Edit onClick={ ()=> { this.edit(this.state.pitanje.id); } }   /> }
+		   { this.state.mode === "EDIT" ?  <Done onClick={()=> this.addPitanje() } /> :  <Edit onClick={ ()=> { this.edit(this.state.pitanje.id); } }   /> }
 		    <Delete onClick={ ()=> this.props.deletePitanje(this.state.pitanje.id)  }  />
         	    <RemoveRedEye onClick={ ()=> this.onPreview(this.state.pitanje.id)}  />
 

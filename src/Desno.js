@@ -4,6 +4,7 @@ import { withStyles } from 'material-ui/styles';
 import Ankete from './tbl/Ankete.js';
 import Pitanja from './tbl/Pitanja.js';
 import Odgovaranje from './Odgovaranje.js';
+import DodavanjePitanja from './DodavanjePitanja';
 const styles = theme => ({
   root: {
     flexGrow: 1,
@@ -23,8 +24,11 @@ function Desno(props){
 	                     celaAnketa={props.celaAnketa} />;
 	    break;
     case "UREDJIVANJE_ANKETE":
-	ele =   <Ankete ankete={props.ankete}/>;
-	    break;
+	ele =   <Ankete dodajPitanja={props.dodajPitanja} ankete={props.ankete}/>;
+	break;
+    case "DODAVANJE_PITANJA":
+ 	ele = <DodavanjePitanja  editingAnketa = {props.editingAnketa}   />;
+	break;
     case "PITANJA" :
 	ele = <Pitanja/>;
 	break;

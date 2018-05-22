@@ -23,7 +23,8 @@ class App extends Component {
 	    menuOptions : [ {  tekst:  "Uredjivanje ankete", mode: "UREDJIVANJE_ANKETE"}  ,
 	                    { tekst: "Pitanja", mode: "PITANJA"},
 			    { tekst: "Odgovoranje", mode: "ODGOVORANJE"}],
-	    mode: "PITANJA",
+	    mode: "UREDJIVANJE_ANKETE",
+	    editingAnketa: null,
 	    anketa: { id_ankete: 44,
                       naziv_ankete: 'Prva anketa',
                       pitanja: [
@@ -52,11 +53,12 @@ class App extends Component {
     onMenuClick=(e)=>{
 	this.setState( { anchorEl: e.target });
     }
-  
+    dodajPitanja=(anketa)=>{
+	this.setState({mode: "DODAVANJE_PITANJA",editingAnketa: anketa });
+    }
     handleMenuItemClick=(e,index)=>{
   	this.setState( (prevState) =>  {
 	    const newMode  = prevState.menuOptions[index].mode;
-	    console.log(newMode);
 	    if ( prevState !== 'UREDJIVANJE_ANKETE' && newMode ===  'UREDJIVANJE_ANKETE'  ){
 		API.getAnkete()
 		    .then((data)=> this.setState({mode: newMode, ankete: data , anchorEl: null}));
@@ -125,7 +127,7 @@ class App extends Component {
 
           <Grid container>
             { !this.state.logged   ? <Unloged/> : 
-		<Desno mode= {this.state.mode} kadOdgovori ={this.kadOdgovori} celaAnketa={this.state.anketa}/>
+		<Desno editingAnketa={this.state.editingAnketa} mode= {this.state.mode} dodajPitanja={this.dodajPitanja} kadOdgovori ={this.kadOdgovori} celaAnketa={this.state.anketa}/>
 		}
           </Grid>  
         </Grid>
