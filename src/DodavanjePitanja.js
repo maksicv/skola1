@@ -1,7 +1,7 @@
 import React,{Component} from 'react';
 import { withStyles} from 'material-ui/styles';
 import {Grid,Paper} from 'material-ui';
-
+import API from './api';
 const styles = theme => ({
     root : {
     },
@@ -18,6 +18,20 @@ const styles = theme => ({
 });
 
 export default withStyles(styles)(class DodavanjePitanja extends Component {
+    constructor(props){
+	super(props);
+	console.log(props);
+	this.state = {
+	    pitanjaizankete: [],
+	    editingAnketa: props.editingAnketa,
+	};
+    }
+    componentDidMount(){
+	API.getPitanjaIzAnkete(this.state.editingAnketa.id)
+	    .then((data)=> {
+		console.log(data);
+	    });
+    }
     render(){
 	const {classes} = this.props;
 	return (

@@ -101,11 +101,12 @@ export default withStyles(styles)(class Pitanja extends Component {
                 </Grid>
 		
 		<Grid className={classes.mainPaper} xs={12}  item>
-		  { this.state.pitanja.map( (pitanje)=> {  
-		      return <EditorPitanja onPreview={this.previewPitanje}
+		  { this.state.pitanja.map( (pitanje)=> {
+		      console.log(pitanje);
+		      return <EditorPitanja     onPreview={this.previewPitanje}
 						deletePitanje={this.deletePitanje}
 						editPitanje={this.editPitanje}
-						key={pitanje.id} pitanje={pitanje}/>; }
+						key= {pitanje.id}  pitanje={pitanje}/>; }
 				    )}
 		</Grid>
 	      </Grid>

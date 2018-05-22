@@ -217,7 +217,7 @@ class Ankete extends React.Component {
   	              <Edit color="primary" onClick = {() => this.onEdit({title: anketa.title,id: anketa.id,description: anketa.description} )}/>
                     </IconButton>
 		    <IconButton  aria-label="Uredi anketu">
-  	              <PlaylistAdd color="primary" onClick = {() => this.props.dodajPitanja(anketa.id) } />
+  	              <PlaylistAdd color="primary" onClick = {() => this.props.dodajPitanja(anketa) } />
                     </IconButton>
 
 		    </Grid>

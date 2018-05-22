@@ -1,5 +1,9 @@
 const API = 	{
     logouturl : "",
+    fetch: function(call) {
+	return fetch(call,{headers: API.headers})
+	    .then( (response)=>  response.json())
+    },
     url : "http://localhost:8080/api/",
     headers : {
 	'Accept': 'application/json, text/plain, */*',
@@ -10,7 +14,11 @@ const API = 	{
 	API.logouturl = keycloak.createLogoutUrl();
     },
 
-    
+    getPitanjaIzAnkete(anketaid){
+	const call =   API.url + "pitanjaizankete/" + anketaid ;
+	return API.fetch(call);
+    },
+       
     getAnkete: ( page,rowsperpage  )=> {
 	const call =   API.url + "anketa?page=" + page + "&rowsPerPage=" + rowsperpage;
 	return fetch(call,{headers: API.headers})
