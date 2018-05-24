@@ -1,10 +1,9 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React,{Component}  from 'react';
 import { withStyles } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
 import { Paper, Grid} from 'material-ui';
-import ListaPitanja from './ListaPitanja'
-
+import ListaPitanja from './ListaPitanja';
+import API from './api';
 
 const styles = theme => ({
   root: {
@@ -16,26 +15,34 @@ const styles = theme => ({
         
   },
 });
-function Odgovoranje(props){
-        const { classes } = props;
+
+export default withStyles(styles)(class Odgovoranje extends Component {
+    constructor(props){
+	super(props);
+	this.state= {
+	    pitanja: []
+	};
+    }
+    
+    componentDidMount=()=>{
+	API.getPitanjaIzAnkete(1).then((data)=> this.setState({pitanja:data}));
+    }
+	
+    render() {
+	const {classes} = this.props;
         return(
           <Grid item xs={12}>
           <Paper className = {classes.paper}>
           <Typography variant="display1" gutterBottom>
-             {props.celaAnketa.naziv_ankete}
+             {this.props.celaAnketa.naziv_ankete}
       </Typography>
           
-          <ListaPitanja kadOdgovori ={props.kadOdgovori} pitanja={props.celaAnketa.pitanja}/>
+          <ListaPitanja kadOdgovori ={this.props.kadOdgovori} pitanja={this.state.pitanja}/>
         
         
 
         </Paper>
         </Grid>
-        )
-}
-
-Odgovoranje.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(Odgovoranje);
+        );
+    }
+});

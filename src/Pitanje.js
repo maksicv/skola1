@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 
-import SimpleTable from './SimpleTable'
+import SimpleTable from './SimpleTable';
+import OpenPitanje from './OpenPitanje';
 
 import {ListItem} from 'material-ui/List';
 
@@ -14,11 +15,21 @@ const styles = theme => ({
 });
 
 function Pitanje(props){
+    console.log(props);
         const { classes } = props;
 return(
 	<div key={props.pitanje.id} className={classes.root}  >
-	  <ListItem key={props.pitanje.id}> 
-	    <SimpleTable  odgovor={props.pitanje.odgovor}  kadOdgovori ={props.kadOdgovori} id_pitanja={props.pitanje.id} tekst_pitanja = {props.pitanje.tekst_pitanja} ponudjeni={props.pitanje.ponudjeni} />
+	  <ListItem key={props.pitanje.id}>
+	    { props.pitanje.tipPitanja === "RESTRICTED" ?
+		<SimpleTable  odgovor={props.pitanje.odgovor}
+			  kadOdgovori ={props.kadOdgovori}
+			  pitanje={props.pitanje}
+				  /> :
+		    <OpenPitanje  odgovor={props.pitanje.odgovor}
+			  kadOdgovori ={props.kadOdgovori}
+			  pitanje={props.pitanje}
+			  />
+		}
 	  </ListItem>
 	</div>
 )}

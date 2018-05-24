@@ -1,13 +1,14 @@
 const API = 	{
     logouturl : "",
     fetch: function(call,body) {
-	if (body) {
+	    if (body) {
 	    return fetch(call,{headers: API.headers,body:JSON.stringify(body),method: "POST"})
-	    .then( (response)=>  response.json())
+	    .then( (response)=> { return  response.json() } )
 	} else {
 	    return fetch(call,{headers: API.headers})
-		.then( (response)=>  response.json())
+		.then( (response)=> { return response.json()} )
 	}
+    
     },
     url : "http://localhost:8080/api/",
     headers : {
@@ -17,6 +18,7 @@ const API = 	{
     setKeycloak: (keycloak)=> {
  	API.headers['Authorization']= 'Bearer ' + keycloak.token;
 	API.logouturl = keycloak.createLogoutUrl();
+	API.keycloak = keycloak;
     },
 
     izbaciPitanje(anketaid,pitanjeid,rednibroj){
@@ -39,8 +41,11 @@ const API = 	{
 	}
 	return API.fetch(call);
     },
-    getPitanjaIzAnkete(anketaid){
-	const call =   API.url + "pitanjaizankete/" + anketaid ;
+    getPitanjaIzAnkete(anketaid,search){
+	let call =   API.url + "pitanjaizankete/" + anketaid ;
+	if ( search ) {
+	    call = call + "?search=" + search;
+	}
 	return API.fetch(call);
     },
        

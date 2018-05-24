@@ -9,7 +9,7 @@ const styles = theme => ({
     },
     paper: {
       padding: 10,
-	margin: 50,
+	margin: 10,
         flexGrow: 1,
 	minHeight: 400,
 	
@@ -50,34 +50,24 @@ export default withStyles(styles)(class DodavanjePitanja extends Component {
     }
 
     izbaciPitanje=(pitanje)=>{
-	API.dodajPitanje(this.state.editingAnketa.id,pitanje.id,1)
+	API.izbaciPitanje(this.state.editingAnketa.id,pitanje.id,1)
 	    .then(()=> this.setState( (prevState)=> {
-		return { pitanjaizankete : prevState.pitanjaizankete.filter((p)=>{ return p.pitanje.id !== pitanje.id;}),
-			 pitanjavanankete: [...prevState.pitanjavanankete, { pitanje: pitanje } ]
-		       };
+		const newState = { pitanjaizankete : prevState.pitanjaizankete.filter((p)=>{ return p.pitanje.id !== pitanje.id;}),
+			           pitanjavanankete: [...prevState.pitanjavanankete, pitanje  ]
+				 };
+		console.log(newState);
+		return newState;
 	    }));
 	 
     }
     componentDidMount(){
-	let pitanjaizankete = null;
-	let pitanjavanankete = null;
-	API.getPitanjaIzAnkete(this.state.editingAnketa.id)
-	    .then((data)=> {
-		pitanjaizankete = data;
-		return API.getPitanjaVanAnkete(this.state.editingAnketa.id);
-	    })
-	    .then((d1)=>{
-		pitanjavanankete = d1;
-	    })
-	    .then( ()=>{
-		
-		console.log(pitanjavanankete);
-		console.log(pitanjaizankete);
-		
-		this.setState({pitanjavanankete: pitanjavanankete,
-			       pitanjaizankete:  pitanjaizankete});
+	API.getPitanjaVanAnkete(this.state.editingAnketa.id)
+	    .then((data) => {
+		console.log(data);
+		this.setState({pitanjavanankete: data});
 	    });
-	
+	API.getPitanjaIzAnkete(this.state.editingAnketa.id)
+	    .then((data)=> this.setState({pitanjaizankete: data}));
     }
     render(){
 	const anketa = this.props.editingAnketa;
@@ -104,7 +94,8 @@ export default withStyles(styles)(class DodavanjePitanja extends Component {
  		  </Grid>
 		  <Grid item xs={6}>
 		    <Paper className={classes.paper}>
-		      <PitanjaIzAnkete izbaciPitanje={this.izbaciPitanje} pitanja={this.state.pitanjaizankete} />
+		      <PitanjaIzAnkete onSearch={this.onSearchRight}
+				       izbaciPitanje={this.izbaciPitanje} pitanja={this.state.pitanjaizankete} />
 		    </Paper>
 		  </Grid>
 		</Grid>

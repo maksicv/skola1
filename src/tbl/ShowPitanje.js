@@ -1,7 +1,7 @@
 import React from 'react';
 import { withStyles} from 'material-ui/styles';
 import {Grid,Chip} from 'material-ui';
-import SimpleTable from '../SimpleTable';
+import Pitanje from '../Pitanje';
 
 const styles = theme => ({
     grid: {
@@ -18,11 +18,8 @@ export default withStyles(styles)(class ShowPitanje extends React.Component {
 	const {preview} = this.props;
 	return (
 	    <Grid container>
-	      {  preview  ? <SimpleTable  odgovor={null}
-		                         kadOdgovori ={()=>console.log("tu") }
-		                         id_pitanja={pitanje.id}
-		                         tekst_pitanja = {pitanje.description}
-		    ponudjeni={pitanje.ponudjeniOdgovori} /> :
+	      {  preview  ?  <Pitanje key={pitanje.id}  kadOdgovori ={()=>null}  pitanje={pitanje}/>
+ :
   		  <Grid container>
 			<Grid className={classes.grid} item>{pitanje.description}</Grid>
 			    <Grid className={classes.grid} item>{pitanje.tipPitanja}</Grid>

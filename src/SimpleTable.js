@@ -28,30 +28,32 @@ const styles = theme => ({
 
 
 function  SimpleTable(props) {
-
-  const {classes} = props
-  return (
-    <Paper className={classes.paper}>
-    <Table className={classes.table}>
-    <TableHead>
-    <TableRow>
-    <TableCell> {props.id_pitanja}</TableCell>
-    { props.ponudjeni.map ( (item) => (
-      <TableCell key={item}>{item}</TableCell>
-    ))}
-    
-    </TableRow>
-    </TableHead>
-    <TableBody>
+    const {classes} = props;
+    let {pitanje} = props;
+    !Array.isArray(pitanje.ponudjeniOdgovori) ?
+	pitanje["ponudjeniOdgovori"] = pitanje.ponudjeniOdgovori.split(","):
+	pitanje = pitanje;
+    return (
+	<Paper className={classes.paper}>
+	  <Table className={classes.table}>
+	    <TableHead>
+	      <TableRow>
+		<TableCell> {pitanje.id}</TableCell>
+		{ pitanje.ponudjeniOdgovori.map ( (item) => (
+		    <TableCell key={item}>{item}</TableCell>
+		))}
+       	    </TableRow>
+	   </TableHead>
+	  <TableBody>
     
     <TableRow key={"od"}>
-    <TableCell><Typography variant="subheading" >{props.tekst_pitanja}</Typography> </TableCell>
-    {props.ponudjeni.map( n => {
+    <TableCell><Typography variant="subheading" >{pitanje.description}</Typography> </TableCell>
+	    {pitanje.ponudjeniOdgovori.map( n => {
       return (
         
               <TableCell key={n} className={classes.checkCell}  >
         <Checkbox             
-        onChange={()=> props.kadOdgovori( props.id_pitanja, n ) }
+        onChange={()=> props.kadOdgovori( pitanje.id, n ) }
         checked= {props.odgovor === n }
         value="checkedB"
         color="primary"

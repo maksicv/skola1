@@ -27,7 +27,7 @@ const styles = theme => ({
 function ListaPitanja(props){
         const { classes } = props;
         const dense=false;
-        
+        console.log(props);
         return(
 
 
@@ -37,7 +37,7 @@ function ListaPitanja(props){
             <div className={classes.demo}>
               <List dense={dense}>
                 { props.pitanja.map( (item)=> (
-		    <Pitanje key={item.id}  kadOdgovori ={props.kadOdgovori}  pitanje={item}/>
+		    <Pitanje key={item.pitanje.id}  kadOdgovori ={props.kadOdgovori}  pitanje={item.pitanje}/>
                 ))}
             </List>
             </div>
