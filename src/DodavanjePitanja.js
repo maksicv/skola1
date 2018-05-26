@@ -71,8 +71,6 @@ export default withStyles(styles)(class DodavanjePitanja extends Component {
     }
     render(){
 	const anketa = this.props.editingAnketa;
-	console.log(this.props);
-	console.log(anketa);
 	const {classes} = this.props;
 	return (
 	    <Paper className={classes.paper}>
