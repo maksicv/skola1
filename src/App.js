@@ -5,11 +5,11 @@ import Desno from './Desno';
 import Unloged from './Unloged';
 import 'typeface-roboto';
 import API from './api';
-import Keycloak from 'keycloak-js';
+// import Keycloak from 'keycloak-js';
 
 const userimage = 'alex.jpg';
 
-const keycloak = Keycloak();
+// const keycloak = Keycloak();
 
 class App extends Component {
     constructor(){
@@ -90,14 +90,18 @@ class App extends Component {
       this.login();
   }
 
- componentDidMount=()=>{
-     keycloak.init().success( auth => {
-	 auth ? keycloak.loadUserInfo().then((data)=> { API.setKeycloak(keycloak);
-							this.setState({logged: true ,
-								       user: {image: userimage,
-									      username: data.preferred_username,token:keycloak.token }} );
-							 } ) : keycloak.login();
-     });
+    componentDidMount=()=>{
+	this.setState({logged: true ,
+		       user: {image: userimage,
+			      username: "vlaki"}});
+	
+     // keycloak.init().success( auth => {
+     // 	 auth ? keycloak.loadUserInfo().then((data)=> { API.setKeycloak(keycloak);
+     // 							this.setState({logged: true ,
+     // 								       user: {image: userimage,
+     // 									      username: data.preferred_username,token:keycloak.token }} );
+     // 							 } ) : keycloak.login();
+     // });
      
     }
     

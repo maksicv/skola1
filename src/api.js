@@ -14,13 +14,15 @@ const API = 	{
     headers : {
 	'Accept': 'application/json, text/plain, */*',
 	'Content-Type': 'application/json'
+
     },
+    /*
     setKeycloak: (keycloak)=> {
  	API.headers['Authorization']= 'Bearer ' + keycloak.token;
 	API.logouturl = keycloak.createLogoutUrl();
 	API.keycloak = keycloak;
     },
-
+*/
     izbaciPitanje(anketaid,pitanjeid,rednibroj){
 	const call = API.url + "izbacipitanje";
 	const body = { redniBroj: rednibroj, idAnkete: anketaid, pitanje:{ id: pitanjeid}}
